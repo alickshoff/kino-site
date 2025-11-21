@@ -1,16 +1,17 @@
 /* style.css */
+/* Базовые стили */
 #searchBtn { padding:10px 14px; background:#e50914; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-left:10px; }
 select { padding:10px; background:#111; color:#fff; border:none; border-radius:6px; margin-right:10px; }
 #seasonEpisodeSelector button { padding:8px; background:#e50914; border:none; border-radius:6px; color:#fff; cursor:pointer; }
 #seasonEpisodeSelector select { padding:8px; background:#222; color:#fff; border:none; border-radius:6px; margin-right:10px; }
 body { font-family: Inter, Arial, sans-serif; background:#000; color:#fff; margin:0; }
 .bg { position:fixed; inset:0; background:linear-gradient(120deg, rgba(9,9,12,0.9), rgba(20,12,30,0.7)), url('https://images.unsplash.com/photo-1505685296765-3a2736de412f') center/cover no-repeat; opacity:1; z-index:-1; filter:blur(2px) brightness(0.6); }
-header { display:flex; justify-content:space-between; align-items:center; padding:20px 30px; background:linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); position:sticky; top:0; z-index:5; }
-h1 { margin:0; font-size:24px; letter-spacing:1px; }
+header { display:flex; justify-content:space-between; align-items:center; padding:20px 30px; background:linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); position:sticky; top:0; z-index:5; flex-wrap:wrap; gap:10px; }
+h1 { margin:0; font-size:24px; letter-spacing:1px; flex:1; }
 #search { padding:10px 14px; width:320px; border-radius:6px; border:none; font-size:16px; background:#111; color:#fff; }
 .movie-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:22px; padding:30px; }
-.movie { background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.3)); border-radius:10px; cursor:pointer; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; box-shadow:0 6px 18px rgba(0,0,0,0.6); }
-.movie:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,0.7); }
+.movie { background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.3)); border-radius:10px; cursor:pointer; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; box-shadow:0 6px 18px rgba(0,0,0,0.6); will-change: transform, box-shadow; }
+.movie:hover, .movie:active { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,0.7); }
 .movie img { width:100%; display:block; height:270px; object-fit:cover; }
 .movie-info { padding:12px; display:flex; flex-direction:column; gap:8px; }
 .movie-title { font-size:16px; font-weight:600; }
@@ -18,13 +19,54 @@ h1 { margin:0; font-size:24px; letter-spacing:1px; }
 .pager { text-align:center; padding:10px 0 60px 0; }
 .pager button { margin:0 6px; padding:8px 12px; border-radius:6px; border:none; background:#222; color:#fff; cursor:pointer; }
 .pager button.active { background:#e50914; }
-.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:10; }
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:10; opacity:0; transition:opacity 0.3s ease; }
+.modal.show { display:block; opacity:1; }
 .modal-content { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:92%; max-width:900px; }
 #playerFrame { width:100%; height:520px; border:none; border-radius:8px; }
 .close-btn { color:#fff; font-size:34px; cursor:pointer; position:absolute; right:10px; top:-50px; }
-.info-box { background:linear-gradient(180deg,#0b0b0b,#151515); width:95%; max-width:980px; border-radius:12px; padding:20px; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); display:flex; gap:20px; align-items:flex-start; }
+.info-box { background:linear-gradient(180deg,#0b0b0b,#151515); width:95%; max-width:980px; border-radius:12px; padding:20px; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); display:flex; gap:20px; align-items:flex-start; flex-direction:column; opacity:0; transform:translate(-50%, -50%) scale(0.95); transition:opacity 0.3s ease, transform 0.3s ease; }
+.info-box.show { opacity:1; transform:translate(-50%, -50%) scale(1); }
 .info-box img { width:260px; border-radius:8px; object-fit:cover; }
-.info-text { max-width:560px; }
+.info-text { max-width:560px; width:100%; }
 .watch-btn { margin-top:14px; padding:10px 16px; font-size:16px; background:#e50914; border:none; border-radius:8px; cursor:pointer; }
 .tmdb-link { margin-left:12px; color:#fff; text-decoration:underline; }
 .notice { position:fixed; right:20px; bottom:20px; background:#222; padding:12px 16px; border-radius:8px; display:none; }
+
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 768px) {
+  header { padding:15px 20px; }
+  h1 { font-size:20px; }
+  #search { width:100%; margin-bottom:10px; }
+  #searchBtn { width:100%; margin-left:0; }
+  .movie-grid { grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:15px; padding:20px; }
+  .movie img { height:200px; }
+  .movie-info { padding:8px; }
+  .movie-title { font-size:14px; }
+  .movie-sub { font-size:12px; }
+  .pager button { padding:6px 10px; font-size:14px; margin:0 3px; }
+  .modal-content { width:100%; height:100%; top:0; left:0; transform:none; }
+  #playerFrame { height:60vh; border-radius:0; }
+  .close-btn { right:10px; top:10px; font-size:28px; }
+  .info-box { width:100%; height:100%; top:0; left:0; transform:none; padding:15px; border-radius:0; flex-direction:column; gap:15px; transform:none scale(0.95); }
+  .info-box.show { transform:none scale(1); }
+  .info-box img { width:100%; max-width:200px; height:300px; object-fit:cover; }
+  .info-text { max-width:none; }
+  #infoOverview { max-height:150px; overflow-y:auto; }
+  .watch-btn { width:100%; }
+  .tmdb-link { margin-left:0; text-align:center; display:block; margin-top:10px; }
+  #seasonEpisodeSelector { display:flex; flex-direction:column; gap:10px; }
+  #seasonEpisodeSelector select, #seasonEpisodeSelector button { width:100%; }
+  .notice { right:10px; bottom:10px; left:10px; text-align:center; }
+  /* Оптимизация анимаций для мобильных */
+  .movie { transition-duration:0.15s; } /* Короткая анимация */
+  .movie:active { transform:translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,0.5); } /* Уменьшенный эффект для тача */
+  .modal { transition-duration:0.2s; }
+  .info-box { transition-duration:0.2s; }
+}
+
+@media (max-width: 480px) {
+  header { padding:10px 15px; flex-direction:column; align-items:flex-start; gap:10px; }
+  .movie-grid { grid-template-columns:1fr; gap:15px; padding:15px; }
+  .movie img { height:250px; }
+  .pager { padding-bottom:20px; }
+}
