@@ -16,17 +16,21 @@ function showNotice(text, time=3500){
   setTimeout(()=> noticeEl.style.display='none', time);
 }
 async function fetchMedia(query = null, type = currentType){
-  let url1, url2;
-  if (query){
-    const q = encodeURIComponent(query);
-    url1 = `${TMDB}/search/${type}?api_key=${API_KEY}&language=ru-RU&query=${q}&page=1`;
-    url2 = `${TMDB}/search/${type}?api_key=${API_KEY}&language=ru-RU&query=${q}&page=2`;
-  } else {
-    url1 = `${TMDB}/${type}/popular?api_key=${API_KEY}&language=ru-RU&page=1`;
-    url2 = `${TMDB}/${type}/popular?api_key=${API_KEY}&language=ru-RU&page=2`;
+  let urls = [];
+  const numPages = 5; // 5 страниц (100 элементов)
+  for (let page = 1; page <= numPages; page++) {
+    let url;
+    if (query){
+      const q = encodeURIComponent(query);
+      url = `${TMDB}/search/${type}?api_key=${API_KEY}&language=ru-RU&query=${q}&page=${page}`;
+    } else {
+      url = `${TMDB}/${type}/popular?api_key=${API_KEY}&language=ru-RU&page=${page}`;
+    }
+    urls.push(fetch(url).then(res => res.json()));
   }
   try{
     if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY'){
+      showNotice('TMDB API key не установлен — загружены демонстрационные данные.');
       let demo = getDemoMedia(type);
       if (query) demo = demo.filter(m => m.title.toLowerCase().includes(query.toLowerCase()));
       allMedia = demo;
@@ -34,11 +38,9 @@ async function fetchMedia(query = null, type = currentType){
       renderPager();
       return;
     }
-    const [d1, d2] = await Promise.all([
-      fetch(url1).then(res => res.json()),
-      fetch(url2).then(res => res.json())
-    ]);
-    const merged = (d1.results||[]).concat(d2.results||[]);
+    const dataPages = await Promise.all(urls);
+    let merged = [];
+    dataPages.forEach(d => merged = merged.concat(d.results || []));
     allMedia = merged.map(m => ({
       id: m.id,
       title: m.title || m.name,
@@ -63,7 +65,7 @@ async function fetchMedia(query = null, type = currentType){
 function getDemoMedia(type){
   const demo = [];
   const prefix = type === 'movie' ? 'Демо Фильм' : 'Демо Сериал';
-  for(let i=1;i<=40;i++) demo.push({
+  for(let i=1;i<=100;i++) demo.push({
     id: 10000+i,
     title: `${prefix} ${i}`,
     poster: 'https://via.placeholder.com/500x750?text=Poster+'+i,
@@ -162,9 +164,23 @@ async function openInfo(media){
     watchBtn.textContent = 'Смотреть';
     selector.style.display = 'none';
   }
-  document.getElementById('infoModal').style.display = 'block';
+  const infoModal = document.getElementById('infoModal');
+  infoModal.style.display = 'block';
+  const infoBox = document.querySelector('.info-box');
+  setTimeout(() => {
+    infoModal.classList.add('show');
+    infoBox.classList.add('show');
+  }, 10); // Для запуска анимации
 }
-function closeInfo(){ document.getElementById('infoModal').style.display = 'none'; }
+function closeInfo(){ 
+  const infoModal = document.getElementById('infoModal');
+  const infoBox = document.querySelector('.info-box');
+  infoModal.classList.remove('show');
+  infoBox.classList.remove('show');
+  setTimeout(() => {
+    infoModal.style.display = 'none';
+  }, 300); // Время анимации
+}
 async function populateSeasons(media){
   const seasonSelect = document.getElementById('seasonSelect');
   const episodeSelect = document.getElementById('episodeSelect');
@@ -263,7 +279,7 @@ function handleWatch(){
   if (selectedMedia.type === 'movie') {
     const url = `${EMBED_BASE}/${selectedMedia.id}`;
     openPlayer(url);
-    closeInfo();  // Закрываем окно с описанием
+    closeInfo();  
   } else {
     showNotice('Выберите сезон и эпизод ниже.');
   }
@@ -278,17 +294,23 @@ function watchSelectedEpisode(){
   }
   const url = `${EMBED_BASE}tv/${selectedMedia.id}&s=${s}&e=${e}`;
   openPlayer(url);
-  closeInfo();  // Закрываем окно с описанием
+  closeInfo();  
 }
 function openPlayer(link){ 
+  const playerModal = document.getElementById('playerModal');
+  playerModal.style.display = 'block';
   const frame = document.getElementById('playerFrame');
   frame.src = link; 
-  document.getElementById('playerModal').style.display = 'block'; 
+  setTimeout(() => playerModal.classList.add('show'), 10);
 }
 function closePlayer(){ 
-  const frame = document.getElementById('playerFrame');
-  frame.src=''; 
-  document.getElementById('playerModal').style.display='none'; 
+  const playerModal = document.getElementById('playerModal');
+  playerModal.classList.remove('show');
+  setTimeout(() => {
+    const frame = document.getElementById('playerFrame');
+    frame.src=''; 
+    playerModal.style.display='none'; 
+  }, 300);
 }
 // старт
 fetchMedia();
