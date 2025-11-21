@@ -1,0 +1,12 @@
+body { font-family: Arial, sans-serif; background:#111; color:white; margin:0; }
+header { padding:20px; text-align:center; background:#222; font-size:24px; }
+.movie-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:15px; padding:20px; }
+.movie { background:#1b1b1b; border-radius:8px; cursor:pointer; overflow:hidden; transition:0.3s; }
+.movie:hover { transform:scale(1.05); }
+.movie img { width:100%; display:block; }
+.movie-title { padding:10px; font-size:16px; text-align:center; }
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); }
+.modal-content { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:900px; }
+#playerFrame { width:100%; height:500px; border:none; }
+.close-btn { color:white; font-size:30px; cursor:pointer; position:absolute; right:10px; top:-40px; }
+

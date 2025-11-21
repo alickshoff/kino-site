@@ -1,0 +1,12 @@
+[
+    {
+    "title": "Дюна",
+    "poster": "https://image.tmdb.org/t/p/w500/8P1m1J2xBq1cgv6X2NqZcVjYDnF.jpg",
+    "iframe": "https://videocdn.tv/embed/movie/12345"
+    },
+    {
+    "title": "Матрица",
+    "poster": "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+    "iframe": "https://videocdn.tv/embed/movie/67890"
+    }
+    ]
