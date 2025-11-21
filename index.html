@@ -1,22 +1,54 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KinoBox</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KinoBox</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header><h1>KinoBox</h1></header>
-<main>
-<div id="movies" class="movie-grid"></div>
-</main>
-<div id="playerModal" class="modal">
-<div class="modal-content">
-<span class="close-btn" onclick="closePlayer()">×</span>
-<iframe id="playerFrame" allowfullscreen></iframe>
-</div>
-</div>
-<script src="script.js"></script>
+  <div class="bg"></div>
+  <header>
+    <h1>KinoBox</h1>
+    <select id="mediaType">
+      <option value="movie">Фильмы</option>
+      <option value="tv">Сериалы</option>
+    </select>
+    <input id="search" placeholder="Поиск..." />
+    <button id="searchBtn">Поиск</button>
+  </header>
+  <main>
+    <div id="movies" class="movie-grid"></div>
+    <div class="pager" id="pager"></div>
+  </main>
+  <div id="playerModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closePlayer()">×</span>
+      <iframe id="playerFrame" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div id="infoModal" class="modal">
+    <div class="info-box">
+      <span class="close-btn" onclick="closeInfo()">×</span>
+      <img id="infoPoster" alt="poster" />
+      <div class="info-text">
+        <h2 id="infoTitle"></h2>
+        <p id="infoOverview"></p>
+        <p id="infoMeta"></p>
+        <div class="info-actions">
+          <button id="watchBtn" class="watch-btn" onclick="handleWatch()">Смотреть</button>
+          <a id="tmdbLink" class="tmdb-link" target="_blank">Открыть на TMDB</a>
+        </div>
+        <div id="seasonEpisodeSelector" style="display:none; margin-top:10px;">
+          <select id="seasonSelect"></select>
+          <select id="episodeSelect"></select>
+          <button onclick="watchSelectedEpisode()">Смотреть выбранный эпизод</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="notice" class="notice"></div>
+  <script src="script.js"></script>
 </body>
 </html>
