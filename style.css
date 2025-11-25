@@ -531,7 +531,7 @@
     }
   }
   
-  @media (max-width: 600px) {
+  @media (max-width: 400px) {
   .info-box {
     max-height: 60vh; /* было 88vh */
     padding: 12px;    /* было 16px */
@@ -607,6 +607,7 @@
       font-size: 10px;
     }
   }
+
 
 
 
