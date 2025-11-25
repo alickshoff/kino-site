@@ -432,80 +432,96 @@
     }
   
     /* Исправленный .info-box для мобильных */
-.info-box {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  width: 94vw;
-  max-width: 500px;
-  max-height: 88vh;
-  height: auto;
-  padding: 18px;
-  border-radius: 16px;
-  flex-direction: column;
-  gap: 16px;
-  overflow-y: auto;
-  background: linear-gradient(180deg, #bde609, #da2f3d);
-  color: hsl(0, 9%, 82%);
-  z-index: 1001;
-}
+/* === МОБИЛЬНОЕ МОДАЛЬНОЕ ОКНО (.info-box) === */
+@media (max-width: 768px) {
+  .info-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 94vw;
+    max-width: 480px;
+    max-height: 86vh; /* сохранена высота, но чуть компактнее */
+    height: auto;
+    padding: 14px; /* ↓ уменьшено */
+    border-radius: 14px; /* ↓ чуть меньше */
+    flex-direction: column;
+    gap: 12px; /* ↓ уменьшено */
+    overflow-y: auto;
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    color: hsl(0, 9%, 82%);
+    z-index: 1001;
+    transition-duration: 0.2s;
+  }
 
-.info-box.show {
-  transform: translate(-50%, -50%) scale(1);
-}
-.info-box img {
-  width: 100%;
-  max-width: 200px;
-  height: auto;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-  margin: 0 auto;
-  border-radius: 12px;
-}
+  .info-box.show {
+    transform: translate(-50%, -50%) scale(1);
+  }
 
-.info-text {
-  width: 100%;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
+  .info-box img {
+    width: 100%;
+    max-width: 180px; /* ↓ уменьшено */
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    margin: 0 auto;
+    border-radius: 10px; /* ↓ меньше */
+  }
 
-#infoOverview {
-  max-height: 160px;
-  overflow-y: auto;
-  font-size: 14px;
-  line-height: 1.4;
-  text-align: center;
-}
+  .info-text {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* ↓ уменьшено */
+  }
 
-.watch-btn {
-  width: 100%;
-  max-width: 280px;
-}
+  #infoTitle {
+    font-size: 18px; /* ↓ если есть, уменьшите */
+    margin: 0;
+  }
 
-.tmdb-link {
-  margin-left: 0;
-  text-align: center;
-  display: block;
-  margin-top: 10px;
-}
+  #infoMeta {
+    font-size: 13px; /* ↓ */
+  }
 
-#seasonEpisodeSelector {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 280px;
-}
+  #infoOverview {
+    max-height: 130px; /* ↓ уменьшено */
+    overflow-y: auto;
+    font-size: 13px; /* ↓ */
+    line-height: 1.4;
+    text-align: center;
+    padding: 0 4px; /* ↓ меньше боковые отступы */
+  }
 
-#seasonEpisodeSelector select,
-#seasonEpisodeSelector button {
-  width: 100%;
-  padding: 10px;
-  font-size: 15px;
+  .watch-btn {
+    width: 100%;
+    max-width: 260px; /* ↓ */
+    padding: 8px; /* ↓ */
+    font-size: 15px; /* ↓ */
+  }
+
+  .tmdb-link {
+    margin: 8px auto 0; /* ↓ меньше отступ сверху */
+    font-size: 14px; /* ↓ */
+  }
+
+  #seasonEpisodeSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* ↓ */
+    width: 100%;
+    max-width: 260px; /* ↓ */
+  }
+
+  #seasonEpisodeSelector select,
+  #seasonEpisodeSelector button {
+    width: 100%;
+    padding: 8px; /* ↓ */
+    font-size: 14px; /* ↓ */
+    border-radius: 6px; /* ↓ */
+  }
 }
   
     .notice {
@@ -607,6 +623,7 @@
       font-size: 10px;
     }
   }
+
 
 
 
