@@ -18,6 +18,15 @@
     <input id="search" placeholder="Поиск..." />
     <button id="searchBtn">Поиск</button>
   </header>
+  <!-- После закрывающего тега </header> -->
+  <div class="trailers-section">
+    <h2 class="section-title">Трейлеры</h2>
+    <div class="trailers-auto-scroll">
+      <div class="trailers-track" id="trailersTrack">
+        <div class="trailer-placeholder">Загрузка...</div>
+      </div>
+    </div>
+  </div>
   <main>
     <div id="movies" class="movie-grid"></div>
     <div class="pager" id="pager"></div>
@@ -39,6 +48,7 @@
         <div class="info-actions">
           <button id="watchBtn" class="watch-btn" onclick="handleWatch()">Смотреть</button>
           <a id="tmdbLink" class="tmdb-link" target="_blank">Открыть на TMDB</a>
+          <button class="close-info-btn">&times;</button>
         </div>
         <div id="seasonEpisodeSelector" style="display:none; margin-top:10px;">
           <select id="seasonSelect"></select>
@@ -52,4 +62,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
