@@ -1,72 +1,593 @@
 /* style.css */
 /* Базовые стили */
-#searchBtn { padding:10px 14px; background:#e50914; color:#fff; border:none; border-radius:6px; cursor:pointer; margin-left:10px; }
-select { padding:10px; background:#111; color:#fff; border:none; border-radius:6px; margin-right:10px; }
-#seasonEpisodeSelector button { padding:8px; background:#e50914; border:none; border-radius:6px; color:#fff; cursor:pointer; }
-#seasonEpisodeSelector select { padding:8px; background:#222; color:#fff; border:none; border-radius:6px; margin-right:10px; }
-body { font-family: Inter, Arial, sans-serif; background:#000; color:#fff; margin:0; }
-.bg { position:fixed; inset:0; background:linear-gradient(120deg, rgba(9,9,12,0.9), rgba(20,12,30,0.7)), url('https://images.unsplash.com/photo-1505685296765-3a2736de412f') center/cover no-repeat; opacity:1; z-index:-1; filter:blur(2px) brightness(0.6); }
-header { display:flex; justify-content:space-between; align-items:center; padding:20px 30px; background:linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); position:sticky; top:0; z-index:5; flex-wrap:wrap; gap:10px; }
-h1 { margin:0; font-size:24px; letter-spacing:1px; flex:1; }
-#search { padding:10px 14px; width:320px; border-radius:6px; border:none; font-size:16px; background:#111; color:#fff; }
-.movie-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:22px; padding:30px; }
-.movie { background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.3)); border-radius:10px; cursor:pointer; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; box-shadow:0 6px 18px rgba(0,0,0,0.6); will-change: transform, box-shadow; }
-.movie:hover, .movie:active { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,0.7); }
-.movie img { width:100%; display:block; height:270px; object-fit:cover; }
-.movie-info { padding:12px; display:flex; flex-direction:column; gap:8px; }
-.movie-title { font-size:16px; font-weight:600; }
-.movie-sub { font-size:13px; color:#bdbdbd; }
-.pager { text-align:center; padding:10px 0 60px 0; }
-.pager button { margin:0 6px; padding:8px 12px; border-radius:6px; border:none; background:#222; color:#fff; cursor:pointer; }
-.pager button.active { background:#e50914; }
-.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:10; opacity:0; transition:opacity 0.3s ease; }
-.modal.show { display:block; opacity:1; }
-.modal-content { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:92%; max-width:900px; }
-#playerFrame { width:100%; height:520px; border:none; border-radius:8px; }
-.close-btn { color:#fff; font-size:34px; cursor:pointer; position:absolute; right:10px; top:-50px; }
-.info-box { background:linear-gradient(180deg,#0b0b0b,#151515); width:95%; max-width:980px; border-radius:12px; padding:20px; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); display:flex; gap:20px; align-items:flex-start; flex-direction:column; opacity:0; transform:translate(-50%, -50%) scale(0.95); transition:opacity 0.3s ease, transform 0.3s ease; }
-.info-box.show { opacity:1; transform:translate(-50%, -50%) scale(1); }
-.info-box img { width:260px; border-radius:8px; object-fit:cover; }
-.info-text { max-width:560px; width:100%; }
-.watch-btn { margin-top:14px; padding:10px 16px; font-size:16px; background:#e50914; border:none; border-radius:8px; cursor:pointer; }
-.tmdb-link { margin-left:12px; color:#fff; text-decoration:underline; }
-.notice { position:fixed; right:20px; bottom:20px; background:#222; padding:12px 16px; border-radius:8px; display:none; }
-
-/* МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 768px) {
-  header { padding:15px 20px; }
-  h1 { font-size:20px; }
-  #search { width:100%; margin-bottom:10px; }
-  #searchBtn { width:100%; margin-left:0; }
-  .movie-grid { grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:15px; padding:20px; }
-  .movie img { height:200px; }
-  .movie-info { padding:8px; }
-  .movie-title { font-size:14px; }
-  .movie-sub { font-size:12px; }
-  .pager button { padding:6px 10px; font-size:14px; margin:0 3px; }
-  .modal-content { width:100%; height:100%; top:0; left:0; transform:none; }
-  #playerFrame { height:60vh; border-radius:0; }
-  .close-btn { right:10px; top:10px; font-size:28px; }
-  .info-box { width:100%; height:100%; top:0; left:0; transform:none; padding:15px; border-radius:0; flex-direction:column; gap:15px; transform:none scale(0.95); }
-  .info-box.show { transform:none scale(1); }
-  .info-box img { width:100%; max-width:200px; height:300px; object-fit:cover; }
-  .info-text { max-width:none; }
-  #infoOverview { max-height:150px; overflow-y:auto; }
-  .watch-btn { width:100%; }
-  .tmdb-link { margin-left:0; text-align:center; display:block; margin-top:10px; }
-  #seasonEpisodeSelector { display:flex; flex-direction:column; gap:10px; }
-  #seasonEpisodeSelector select, #seasonEpisodeSelector button { width:100%; }
-  .notice { right:10px; bottom:10px; left:10px; text-align:center; }
-  /* Оптимизация анимаций для мобильных */
-  .movie { transition-duration:0.15s; } /* Короткая анимация */
-  .movie:active { transform:translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,0.5); } /* Уменьшенный эффект для тача */
-  .modal { transition-duration:0.2s; }
-  .info-box { transition-duration:0.2s; }
+#searchBtn {
+    padding: 10px 14px;
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  select {
+    padding: 10px;
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    color: #fff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    margin-right: 10px;
+  }
+  #seasonEpisodeSelector button {
+    padding: 8px;
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+  }
+  #seasonEpisodeSelector select {
+    padding: 8px;
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    margin-right: 10px;
+  }
+  body {
+    font-family: Inter, Arial, sans-serif;
+    background: #000;
+    color: rgb(158, 9, 9);
+    margin: 0;
+  }
+  .bg {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(9, 9, 12, 0.9), rgba(20, 12, 30, 0.7)),
+      url('https://images.unsplash.com/photo-1505685296765-3a2736de412f') center/cover
+        no-repeat;
+    opacity: 1;
+    z-index: -1;
+    filter: blur(2px) brightness(0.6);
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: linear-gradient(
+      to bottom,
+      rgba(161, 6, 97, 0.6),
+      rgba(0, 0, 0, 0.2)
+    );
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 8vw, 48px); /* От 28px на мобиле до 48px на десктопе */
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #8f086d;
+    flex: 1;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    line-height: 1.1;
+  }
+  .trailers-section {
+    padding: 0 30px 30px;
+    overflow: hidden;
+  }
+  
+  .trailers-auto-scroll {
+    overflow: hidden;
+    position: relative;
+    /* Затухание по краям */
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  
+  .trailers-track {
+    display: flex;
+    gap: 20px;
+    min-width: 200%; /* Обязательно >= 200% */
+    animation: scrollLeft 35s linear infinite;
+    padding: 10px 0;
+  }
+  
+  .trailer-card {
+    flex: 0 0 280px;
+    background: rgba(30, 30, 40, 0.6);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 25 / 9;
+    transition: transform 0.25s ease;
+  }
+  
+  .trailer-card:hover {
+    transform: scale(1.03) translateY(-4px);
+    z-index: 2;
+  }
+  
+  .trailer-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .trailer-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .trailer-card:hover .trailer-overlay {
+    opacity: 1;
+  }
+  
+  .trailer-title {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+  
+  .watch-trailer-btn {
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: #e50914;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    width: fit-content;
+  }
+  
+  @keyframes scrollLeft {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .trailer-placeholder {
+    color: #aaa;
+    padding: 40px;
+  }
+  #search {
+    padding: 10px 14px;
+    width: 320px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    background: #111;
+    color: #fff;
+  }
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 22px;
+    padding: 30px;
+  }
+  .movie {
+    background: linear-gradient(
+      180deg,
+      rgba(16, 223, 126, 0.02),
+      rgba(0, 0, 0, 0.3)
+    );
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    will-change: transform, box-shadow;
+  }
+  .movie:hover,
+  .movie:active {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(177, 157, 157, 0.7);
+  }
+  .movie img {
+    width: 90%;
+    display: block;
+    height: 230px;
+    object-fit: cover;
+  }
+  .movie-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .movie-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Исправлено: было 20 */
+    overflow: hidden;
+  }
+  .movie-sub {
+    font-size: 13px;
+    color: #bdbdbd;
+  }
+  .pager {
+    text-align: center;
+    padding: 10px 0 60px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pager button {
+    margin: 0 2px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    background: #222;
+    color: #fff;
+    cursor: pointer;
+    min-width: 40px;
+  }
+  .pager button.active {
+    background: #aae509;
+  }
+  .pager button:hover:not(.active) {
+    background: #300eec;
+  }
+  .pager button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .pager span {
+    margin: 0 5px;
+    color: #ccc;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .modal.show {
+    display: block;
+    opacity: 1;
+  }
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 62%;
+    max-width: 900px;
+  }
+  #playerFrame {
+    width: 100%;
+    height: 520px;
+    border: none;
+    border-radius: 8px;
+  }
+  .close-btn {
+    color: #fff;
+    font-size: 34px;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: -50px;
+  }
+  .info-box {
+    max-height: 40vh; 
+    overflow-y: auto;
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    width: 95%;
+    max-width: 980px;
+    border-radius: 12px;
+    padding: 20px;
+    color: hsl(0, 9%, 82%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-direction: row; /* Изменено с column на row */
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
-@media (max-width: 480px) {
-  header { padding:10px 15px; flex-direction:column; align-items:flex-start; gap:10px; }
-  .movie-grid { grid-template-columns:1fr; gap:15px; padding:15px; }
-  .movie img { height:250px; }
-  .pager { padding-bottom:20px; }
+.info-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
+.info-box img {
+    width: 160px;
+    border-radius: 18px;
+    object-fit: cover;
+    flex-shrink: 2; /* Чтобы изображение не сжималось */
+}
+.info-text {
+    flex: 1; /* Занимает оставшееся пространство */
+    max-width: none; /* Убрано ограничение по ширине */
+    min-width: 0; /* Для правильного работы flex */
+}
+  .watch-btn {
+    margin-top: 14px;
+    padding: 10px 16px;
+    font-size: 16px;
+    color: #fff;
+    background: linear-gradient(180deg, #f10975, #2a1de0);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .close-info-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: linear-gradient(180deg, #f10975, #2a1de0);
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .tmdb-link {
+    margin-left: 12px;
+    color: #fff;
+    text-decoration: underline;
+  }
+  .notice {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #222;
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: none;
+    z-index: 100;
+  }
+  
+  /* МОБИЛЬНАЯ АДАПТАЦИЯ */
+  @media (max-width: 768px) {
+    .movie-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      padding: 15px;
+    }
+  
+    .movie {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+  
+    .movie img {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+    }
+  
+    .movie-title {
+      font-size: 14px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      /* height удалён */
+    }
+  
+    .movie-sub {
+      font-size: 12px;
+      line-height: 1.3;
+    }
+  
+    .pager {
+      padding: 10px 15px 40px;
+      gap: 5px;
+    }
+  
+    .pager button {
+      padding: 6px 10px;
+      font-size: 14px;
+      margin: 0 1px;
+      min-width: 36px;
+    }
+  
+    .modal-content {
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform: none;
+    }
+  
+    #playerFrame {
+      height: 60vh;
+      border-radius: 0;
+    }
+  
+    .close-btn {
+      right: 10px;
+      top: 10px;
+      font-size: 28px;
+    }
+  
+    .info-box {
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform: none;
+      padding: 15px;
+      border-radius: 0;
+      flex-direction: column;
+      gap: 15px;
+      transform: none scale(0.95);
+    }
+  
+    .info-box.show {
+      transform: none scale(1);
+    }
+  
+    .info-box img {
+      width: 100%;
+      max-width: 200px;
+      height: 300px;
+      object-fit: cover;
+      margin: 0 auto;
+    }
+  
+    .info-text {
+      max-width: none;
+    }
+  
+    #infoOverview {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  
+    .watch-btn {
+      width: 100%;
+    }
+  
+    .tmdb-link {
+      margin-left: 0;
+      text-align: center;
+      display: block;
+      margin-top: 10px;
+    }
+  
+    #seasonEpisodeSelector {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    #seasonEpisodeSelector select,
+    #seasonEpisodeSelector button {
+      width: 100%;
+    }
+  
+    .notice {
+      right: 10px;
+      bottom: 10px;
+      left: 10px;
+      text-align: center;
+    }
+  
+    /* Оптимизация анимаций для мобильных */
+    .movie {
+      transition-duration: 0.15s;
+    }
+    .movie:active {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+    }
+    .modal {
+      transition-duration: 0.2s;
+    }
+    .info-box {
+      transition-duration: 0.2s;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    header {
+      padding: 10px 15px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .movie-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 12px;
+    }
+  
+    .movie {
+      max-width: 160px;
+    }
+  
+    .movie img {
+      height: 180px;
+    }
+  
+    .movie-title {
+      font-size: 13px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      /* УДАЛЕНО height: 2.6em */
+    }
+  
+    .movie-sub {
+      font-size: 11px;
+    }
+  
+    .pager {
+      padding-bottom: 20px;
+    }
+  
+    .pager button {
+      padding: 5px 8px;
+      font-size: 13px;
+      min-width: 32px;
+    }
+  }
+  
+  /* Очень маленькие экраны */
+  @media (max-width: 360px) {
+    .movie-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+    }
+  
+    .movie {
+      max-width: 140px;
+    }
+  
+    .movie img {
+      height: 160px;
+    }
+  
+    .movie-title {
+      font-size: 12px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      /* height не указан — правильно */
+    }
+  
+    .movie-sub {
+      font-size: 10px;
+    }
+  }
