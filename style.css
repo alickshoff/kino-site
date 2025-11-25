@@ -431,7 +431,8 @@
       font-size: 28px;
     }
   
-    .info-box {
+    /* Исправленный .info-box для мобильных */
+.info-box {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -445,12 +446,14 @@
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
+  background: linear-gradient(180deg, #bde609, #da2f3d);
+  color: hsl(0, 9%, 82%);
+  z-index: 1001;
 }
 
 .info-box.show {
   transform: translate(-50%, -50%) scale(1);
 }
-
 .info-box img {
   width: 100%;
   max-width: 200px;
@@ -605,4 +608,5 @@
       font-size: 10px;
     }
   }
+
 
