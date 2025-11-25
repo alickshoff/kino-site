@@ -1,3 +1,5 @@
+  /* style.css */
+/* Базовые стили */
 #searchBtn {
     padding: 10px 14px;
     background: linear-gradient(180deg, #bde609, #da2f3d);
@@ -145,7 +147,7 @@
   .watch-trailer-btn {
     margin-top: 8px;
     padding: 6px 14px;
-    background: linear-gradient(180deg, #bde609, #da2f3d);
+    background: #e50914;
     color: white;
     border: none;
     border-radius: 4px;
@@ -431,98 +433,63 @@
       font-size: 28px;
     }
   
-    /* Исправленный .info-box для мобильных */
-/* === МОБИЛЬНОЕ МОДАЛЬНОЕ ОКНО (.info-box) === */
-@media (max-width: 768px) {
-  .info-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
-    width: 94vw;
-    max-width: 480px;
-    max-height: 86vh; /* сохранена высота, но чуть компактнее */
-    height: auto;
-    padding: 14px; /* ↓ уменьшено */
-    border-radius: 14px; /* ↓ чуть меньше */
-    flex-direction: column;
-    gap: 12px; /* ↓ уменьшено */
-    overflow-y: auto;
-    background: linear-gradient(180deg, #bde609, #da2f3d);
-    color: hsl(0, 9%, 82%);
-    z-index: 1001;
-    transition-duration: 0.2s;
-  }
-
-  .info-box.show {
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  .info-box img {
-    width: 100%;
-    max-width: 180px; /* ↓ уменьшено */
-    height: auto;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-    margin: 0 auto;
-    border-radius: 10px; /* ↓ меньше */
-  }
-
-  .info-text {
-    width: 100%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px; /* ↓ уменьшено */
-  }
-
-  #infoTitle {
-    font-size: 18px; /* ↓ если есть, уменьшите */
-    margin: 0;
-  }
-
-  #infoMeta {
-    font-size: 13px; /* ↓ */
-  }
-
-  #infoOverview {
-    max-height: 130px; /* ↓ уменьшено */
-    overflow-y: auto;
-    font-size: 13px; /* ↓ */
-    line-height: 1.4;
-    text-align: center;
-    padding: 0 4px; /* ↓ меньше боковые отступы */
-  }
-
-  .watch-btn {
-    width: 100%;
-    max-width: 260px; /* ↓ */
-    padding: 8px; /* ↓ */
-    font-size: 15px; /* ↓ */
-  }
-
-  .tmdb-link {
-    margin: 8px auto 0; /* ↓ меньше отступ сверху */
-    font-size: 14px; /* ↓ */
-  }
-
-  #seasonEpisodeSelector {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* ↓ */
-    width: 100%;
-    max-width: 260px; /* ↓ */
-  }
-
-  #seasonEpisodeSelector select,
-  #seasonEpisodeSelector button {
-    width: 100%;
-    padding: 8px; /* ↓ */
-    font-size: 14px; /* ↓ */
-    border-radius: 6px; /* ↓ */
-  }
-}
+    .info-box {
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform: none;
+      padding: 15px;
+      border-radius: 0;
+      flex-direction: column;
+      gap: 15px;
+      transform: none scale(0.95);
+    }
+  
+    .info-box.show {
+      transform: none scale(1);
+    }
+  
+    .info-box img {
+      width: 100%;
+      max-width: 200px;
+      height: 300px;
+      object-fit: cover;
+      margin: 0 auto;
+    }
+  
+    .info-text {
+      max-width: none;
+    }
+  
+    #infoOverview {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  
+    .watch-btn {
+      width: 100%;
+    }
+  
+    .tmdb-link {
+      margin-left: 0;
+      text-align: center;
+      display: block;
+      margin-top: 10px;
+    }
+  
+    #seasonEpisodeSelector {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    #seasonEpisodeSelector select,
+    #seasonEpisodeSelector button {
+      width: 100%;
+    }
   
     .notice {
       right: 10px;
@@ -547,12 +514,13 @@
     }
   }
   
-  @media (max-width: 400px) {
-  .info-box {
-    max-height: 60vh; /* было 88vh */
-    padding: 12px;    /* было 16px */
-  }
-}
+  @media (max-width: 480px) {
+    header {
+      padding: 10px 15px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
   
     .movie-grid {
       grid-template-columns: repeat(2, 1fr);
@@ -561,11 +529,11 @@
     }
   
     .movie {
-      max-width: 130px;
+      max-width: 160px;
     }
   
     .movie img {
-      height: 150px;
+      height: 180px;
     }
   
     .movie-title {
@@ -623,10 +591,3 @@
       font-size: 10px;
     }
   }
-
-
-
-
-
-
-
