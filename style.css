@@ -367,227 +367,128 @@
     z-index: 100;
   }
   
-  /* МОБИЛЬНАЯ АДАПТАЦИЯ */
-  @media (max-width: 768px) {
-    .movie-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      padding: 15px;
-    }
-  
-    .movie {
-      width: 100%;
-      max-width: none;
-      margin: 0;
-    }
-  
-    .movie img {
-      height: 200px;
-      width: 100%;
-      object-fit: cover;
-    }
-  
-    .movie-title {
-      font-size: 14px;
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      /* height удалён */
-    }
-  
-    .movie-sub {
-      font-size: 12px;
-      line-height: 1.3;
-    }
-  
-    .pager {
-      padding: 10px 15px 40px;
-      gap: 5px;
-    }
-  
-    .pager button {
-      padding: 6px 10px;
-      font-size: 14px;
-      margin: 0 1px;
-      min-width: 36px;
-    }
-  
-    .modal-content {
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      transform: none;
-    }
-  
-    #playerFrame {
-      height: 60vh;
-      border-radius: 0;
-    }
-  
-    .close-btn {
-      right: 10px;
-      top: 10px;
-      font-size: 28px;
-    }
-  
+  /* === МОБИЛЬНЫЕ УСТРОЙСТВА === */
+
+/* ПОРТРЕТ (вертикально) */
+@media (max-width: 768px) and (orientation: portrait) {
     .info-box {
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      transform: none;
-      padding: 15px;
-      border-radius: 0;
+      width: 96vw;
+      max-width: 520px;
+      max-height: 92vh;
+      padding: 20px;
       flex-direction: column;
-      gap: 15px;
-      transform: none scale(0.95);
-    }
-  
-    .info-box.show {
-      transform: none scale(1);
+      align-items: center;
+      gap: 20px;
     }
   
     .info-box img {
       width: 100%;
-      max-width: 200px;
-      height: 300px;
-      object-fit: cover;
+      max-width: 220px;
       margin: 0 auto;
     }
   
     .info-text {
-      max-width: none;
+      width: 100%;
+      align-items: center;
+      text-align: center;
     }
   
     #infoOverview {
-      max-height: 150px;
-      overflow-y: auto;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-  
-    .watch-btn {
-      width: 100%;
-    }
-  
-    .tmdb-link {
-      margin-left: 0;
       text-align: center;
-      display: block;
-      margin-top: 10px;
+      max-height: 180px;
+    }
+  
+    .watch-btn, .tmdb-link {
+      align-self: center;
+      width: 100%;
+      max-width: 280px;
     }
   
     #seasonEpisodeSelector {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      width: 100%;
+      max-width: 280px;
     }
   
     #seasonEpisodeSelector select,
     #seasonEpisodeSelector button {
       width: 100%;
-    }
-  
-    .notice {
-      right: 10px;
-      bottom: 10px;
-      left: 10px;
-      text-align: center;
-    }
-  
-    /* Оптимизация анимаций для мобильных */
-    .movie {
-      transition-duration: 0.15s;
-    }
-    .movie:active {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
-    }
-    .modal {
-      transition-duration: 0.2s;
-    }
-    .info-box {
-      transition-duration: 0.2s;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    header {
-      padding: 10px 15px;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-  
-    .movie-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
       padding: 12px;
-    }
-  
-    .movie {
-      max-width: 160px;
-    }
-  
-    .movie img {
-      height: 180px;
-    }
-  
-    .movie-title {
-      font-size: 13px;
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      /* УДАЛЕНО height: 2.6em */
-    }
-  
-    .movie-sub {
-      font-size: 11px;
-    }
-  
-    .pager {
-      padding-bottom: 20px;
-    }
-  
-    .pager button {
-      padding: 5px 8px;
-      font-size: 13px;
-      min-width: 32px;
+      font-size: 16px;
     }
   }
   
-  /* Очень маленькие экраны */
-  @media (max-width: 360px) {
-    .movie-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding: 10px;
+  /* АЛЬБОМ (горизонтально) */
+  @media (max-width: 768px) and (orientation: landscape) {
+    .info-box {
+      width: 96vw;
+      max-width: 90vw;
+      max-height: 88vh;
+      padding: 18px;
+      flex-direction: row;
+      gap: 18px;
+      align-items: flex-start;
     }
   
-    .movie {
+    .info-box img {
+      width: 140px;
       max-width: 140px;
+      margin: 0;
     }
   
-    .movie img {
-      height: 160px;
+    .info-text {
+      align-items: flex-start;
+      text-align: left;
     }
   
-    .movie-title {
-      font-size: 12px;
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      /* height не указан — правильно */
+    #infoOverview {
+      text-align: left;
+      max-height: 140px;
     }
   
-    .movie-sub {
-      font-size: 10px;
+    .watch-btn, .tmdb-link {
+      align-self: flex-start;
+      width: auto;
+      min-width: 140px;
     }
+  
+    #seasonEpisodeSelector {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  
+    #seasonEpisodeSelector select,
+    #seasonEpisodeSelector button {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  
+  /* === КНОПКА ЗАКРЫТИЯ === */
+  .close-info-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    color: white;
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1002;
+  }
+  
+  .close-info-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
   }
