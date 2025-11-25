@@ -367,120 +367,100 @@
     z-index: 100;
   }
   
-  /* === МОБИЛЬНЫЕ УСТРОЙСТВА === */
+/* --- МОДАЛЬНОЕ ОКНО --- */
 
-/* ПОРТРЕТ (вертикально) */
-@media (max-width: 768px) and (orientation: portrait) {
-    .info-box {
-      width: 96vw;
-      max-width: 520px;
-      max-height: 92vh;
-      padding: 20px;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-  
-    .info-box img {
-      width: 100%;
-      max-width: 220px;
-      margin: 0 auto;
-    }
-  
-    .info-text {
-      width: 100%;
-      align-items: center;
-      text-align: center;
-    }
-  
-    #infoOverview {
-      text-align: center;
-      max-height: 180px;
-    }
-  
-    .watch-btn, .tmdb-link {
-      align-self: center;
-      width: 100%;
-      max-width: 280px;
-    }
-  
-    #seasonEpisodeSelector {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 280px;
-    }
-  
-    #seasonEpisodeSelector select,
-    #seasonEpisodeSelector button {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-    }
+.info-box {
+    background: linear-gradient(180deg, #bde609, #da2f3d);
+    color: hsl(0, 9%, 82%);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 92vw;
+    max-width: 500px;
+    max-height: 85vh;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1001;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   }
   
-  /* АЛЬБОМ (горизонтально) */
-  @media (max-width: 768px) and (orientation: landscape) {
-    .info-box {
-      width: 96vw;
-      max-width: 90vw;
-      max-height: 88vh;
-      padding: 18px;
-      flex-direction: row;
-      gap: 18px;
-      align-items: flex-start;
-    }
-  
-    .info-box img {
-      width: 140px;
-      max-width: 140px;
-      margin: 0;
-    }
-  
-    .info-text {
-      align-items: flex-start;
-      text-align: left;
-    }
-  
-    #infoOverview {
-      text-align: left;
-      max-height: 140px;
-    }
-  
-    .watch-btn, .tmdb-link {
-      align-self: flex-start;
-      width: auto;
-      min-width: 140px;
-    }
-  
-    #seasonEpisodeSelector {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-  
-    #seasonEpisodeSelector select,
-    #seasonEpisodeSelector button {
-      flex: 1;
-      min-width: 120px;
-      padding: 10px;
-      font-size: 14px;
-    }
+  .info-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
   
-  /* === КНОПКА ЗАКРЫТИЯ === */
+  .info-box img {
+    width: 100%;
+    max-width: 200px;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  
+  .info-text {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  #infoOverview {
+    font-size: 14px;
+    line-height: 1.5;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+  
+  .watch-btn, .tmdb-link {
+    width: 100%;
+    max-width: 280px;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .tmdb-link {
+    display: block;
+  }
+  
+  #seasonEpisodeSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  #seasonEpisodeSelector select,
+  #seasonEpisodeSelector button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+  }
+  
+  /* --- КНОПКА ЗАКРЫТИЯ --- */
   .close-info-btn {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    background: rgba(0, 0, 0, 0.4);
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.5);
     border: none;
     color: white;
-    font-size: 28px;
-    width: 40px;
-    height: 40px;
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -490,5 +470,38 @@
   }
   
   .close-info-btn:hover {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
+  }
+  /* Только для альбомной ориентации на узких экранах */
+@media (max-width: 768px) and (orientation: landscape) {
+    .info-box {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+      max-width: 90vw;
+      gap: 20px;
+    }
+  
+    .info-text {
+      align-items: flex-start;
+      text-align: left;
+    }
+  
+    #infoOverview {
+      text-align: left;
+    }
+  
+    .info-box img {
+      max-width: 140px;
+    }
+  
+    #seasonEpisodeSelector {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  
+    #seasonEpisodeSelector select,
+    #seasonEpisodeSelector button {
+      min-width: 120px;
+    }
   }
