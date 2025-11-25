@@ -531,13 +531,12 @@
     }
   }
   
-  @media (max-width: 480px) {
-    header {
-      padding: 10px 15px;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
+  @media (max-width: 768px) {
+  .info-box {
+    max-height: 80vh; /* было 88vh */
+    padding: 12px;    /* было 16px */
+  }
+}
   
     .movie-grid {
       grid-template-columns: repeat(2, 1fr);
@@ -608,5 +607,6 @@
       font-size: 10px;
     }
   }
+
 
 
