@@ -46,6 +46,15 @@
         <p id="infoOverview"></p>
         <p id="infoMeta"></p>
         <div class="info-actions">
+          <div id="playerSelector" style="display: none; margin: 10px 0;">
+            <label style="color: #ccc; font-size: 14px;">Плеер:</label><br>
+            <select id="embedProvider" style="width: 100%; padding: 6px; margin-top: 4px; background: linear-gradient(180deg, #bde609, #da2f3d); border: 1px solid #444;">
+              <!--<option value="vidsrc">VidSrc.to</option>-->
+              <!--<option value="2embed">2Embed.cc</option>-->
+              <option value="multiembed">MultiEmbed</option>
+            </select>
+          </div>
+  
           <button id="watchBtn" class="watch-btn" onclick="handleWatch()">Смотреть</button>
           <a id="tmdbLink" class="tmdb-link" target="_blank">Открыть на TMDB</a>
           <button class="close-info-btn">&times;</button>
@@ -53,7 +62,7 @@
         <div id="seasonEpisodeSelector" style="display:none; margin-top:10px;">
           <select id="seasonSelect"></select>
           <select id="episodeSelect"></select>
-          <button onclick="watchSelectedEpisode()">Смотреть эпизод</button>
+          <button id="watchEpisodeBtn" onclick="watchSelectedEpisode()">Смотреть эпизод</button>
         </div>
       </div>
     </div>
