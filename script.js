@@ -1,9 +1,7 @@
+const API_KEY = "d625a81a36ac8141a613981f7f1cb2a1"; // ← ЗАМЕНИТЕ НА СВОЙ КЛЮЧ
 
-const API_KEY = "d625a81a36ac8141a613981f7f1cb2a1"; // ← ЗАМЕНИТЕ ЭТОТ ШАБЛОН НА СВОЙ КЛЮЧ
-// --------------------------------------
 const TMDB = "https://api.themoviedb.org/3";
 const IMG = "https://image.tmdb.org/t/p/w500";
-const EMBED_BASE = "https://www.2embed.cc/embed";
 
 let allMedia = [];
 let currentPage = 1;
@@ -374,7 +372,7 @@ function renderPager() {
 }
 
 function escapeHtml(text) {
-  return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '<', '>': '>', '"': '&quot;', "'": '&#39;' })[c]);
+  return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 }
 
 // === ПОИСК ===
@@ -411,10 +409,8 @@ async function openInfo(media) {
   document.getElementById('tmdbLink').href = media.tmdbUrl || '#';
 
   const selector = document.getElementById('seasonEpisodeSelector');
-  const watchBtn = document.getElementById('watchBtn');
 
   if (media.type === 'tv') {
-    watchBtn.textContent = 'Выбрать сезон/эпизод';
     selector.style.display = 'block';
     if (!media.seasons) {
       await populateSeasons(media);
@@ -422,7 +418,6 @@ async function openInfo(media) {
       populateSeasonsFromCache(media);
     }
   } else {
-    watchBtn.textContent = 'Смотреть';
     selector.style.display = 'none';
   }
 
@@ -494,10 +489,20 @@ async function populateSeasons(media) {
   try {
     const res = await fetch(`${TMDB}/tv/${media.id}?api_key=${API_KEY}&language=ru-RU`);
     const data = await res.json();
+
+    if (data.success === false || data.status_code) {
+      console.error('TMDB Error:', data);
+      showNotice('Сериал недоступен: ' + (data.status_message || 'ошибка загрузки'));
+      media.seasons = [];
+      seasonSelect.innerHTML = '<option>Ошибка загрузки</option>';
+      return;
+    }
+
     const numSeasons = data.number_of_seasons || 1;
     media.seasons = [];
 
     for (let s = 1; s <= numSeasons; s++) {
+      if (s === 0) continue;
       const opt = document.createElement('option');
       opt.value = s;
       opt.textContent = `Сезон ${s}`;
@@ -510,10 +515,12 @@ async function populateSeasons(media) {
       await populateEpisodes(s, media);
     };
 
-    await populateEpisodes(1, media);
+    if (numSeasons >= 1) {
+      await populateEpisodes(1, media);
+    }
   } catch (err) {
-    console.error(err);
-    showNotice('Ошибка загрузки сезонов.');
+    console.error('populateSeasons error:', err);
+    showNotice('Не удалось загрузить сезоны.');
   }
 }
 
@@ -548,7 +555,7 @@ async function populateEpisodes(seasonNum, media) {
     media.seasons[seasonIdx].episodes.forEach(ep => {
       const opt = document.createElement('option');
       opt.value = ep.episode_number;
-      opt.textContent = `Эпизод ${ep.episode_number} ${ep.name ? '- ' + ep.name : ''}`;
+      opt.textContent = `Эпизод ${ep.episode_number}`;
       episodeSelect.appendChild(opt);
     });
     return;
@@ -576,7 +583,7 @@ async function populateEpisodes(seasonNum, media) {
     episodes.forEach(ep => {
       const opt = document.createElement('option');
       opt.value = ep.episode_number;
-      opt.textContent = `Эпизод ${ep.episode_number} ${ep.name ? '- ' + ep.name : ''}`;
+      opt.textContent = `Эпизод ${ep.episode_number}`;
       episodeSelect.appendChild(opt);
     });
 
@@ -591,24 +598,53 @@ async function populateEpisodes(seasonNum, media) {
   }
 }
 
-// === ЗАЩИТА ОТ СПАМА ===
+// === MULTIEMBED (ЕДИНСТВЕННЫЙ ПЛЕЕР) ===
+function buildEmbedUrl(media, season = null, episode = null) {
+  const id = media.id;
+  if (media.type === 'movie') {
+    return `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`;
+  } else {
+    if (!season || !episode) return null;
+    return `https://multiembed.mov/directstream.php?video_id=${id}&s=${season}&e=${episode}&tmdb=1`;
+  }
+}
+
 let isWatching = false;
 
 function handleWatch() {
   if (!selectedMedia || isWatching) return;
-  
   isWatching = true;
+
   const watchBtn = document.getElementById('watchBtn');
   const originalText = watchBtn.textContent;
   watchBtn.textContent = 'Загрузка...';
   watchBtn.disabled = true;
 
   if (selectedMedia.type === 'movie') {
-    const url = `${EMBED_BASE}/${selectedMedia.id}`;
-    openPlayer(url);
-    closeInfo();
+    const url = buildEmbedUrl(selectedMedia);
+    if (url) {
+      openPlayer(url);
+      closeInfo();
+    } else {
+      showNotice('Не удалось сформировать ссылку.');
+    }
   } else {
-    showNotice('Выберите сезон и эпизод ниже.');
+    const s = document.getElementById('seasonSelect').value;
+    const e = document.getElementById('episodeSelect').value;
+    if (!s || !e) {
+      showNotice('Выберите сезон и эпизод.');
+      isWatching = false;
+      watchBtn.textContent = originalText;
+      watchBtn.disabled = false;
+      return;
+    }
+    const url = buildEmbedUrl(selectedMedia, s, e);
+    if (url) {
+      openPlayer(url);
+      closeInfo();
+    } else {
+      showNotice('Не удалось создать ссылку.');
+    }
   }
 
   setTimeout(() => {
@@ -620,41 +656,7 @@ function handleWatch() {
   }, 1500);
 }
 
-let isEpisodeWatching = false;
-
-function watchSelectedEpisode() {
-  if (!selectedMedia || selectedMedia.type !== 'tv' || isEpisodeWatching) return;
-  
-  const s = document.getElementById('seasonSelect').value;
-  const e = document.getElementById('episodeSelect').value;
-  
-  if (!s || !e) {
-    showNotice('Выберите сезон и эпизод.');
-    return;
-  }
-
-  isEpisodeWatching = true;
-  const btn = document.getElementById('watchEpisodeBtn');
-  const originalText = btn?.textContent;
-  if (btn) {
-    btn.textContent = 'Загрузка...';
-    btn.disabled = true;
-  }
-
-  const url = `${EMBED_BASE}/tv/${selectedMedia.id}/${s}/${e}`;
-  openPlayer(url);
-  closeInfo();
-
-  setTimeout(() => {
-    isEpisodeWatching = false;
-    if (btn) {
-      btn.textContent = originalText || 'Смотреть эпизод';
-      btn.disabled = false;
-    }
-  }, 1500);
-}
-
-// === ПЛЕЕР ===
+// === PLAYER MODAL ===
 let playerIsOpen = false;
 
 function openPlayer(link) {
@@ -665,6 +667,8 @@ function openPlayer(link) {
   playerModal.style.display = 'block';
   const frame = document.getElementById('playerFrame');
   frame.src = link;
+  
+  showNotice('Загружается MultiEmbed... Если видео не появится — обновите страницу.', 8000);
   
   setTimeout(() => {
     playerModal.classList.add('show');
@@ -682,6 +686,12 @@ function closePlayer() {
   }, 300);
 }
 
-// === ЗАПУСК ===
+document.addEventListener('DOMContentLoaded', () => {
+  const closePlayerBtn = document.querySelector('.close-player-btn');
+  if (closePlayerBtn) {
+    closePlayerBtn.addEventListener('click', closePlayer);
+  }
+});
+
 fetchMedia(null, currentType);
 fetchTrailers();
