@@ -544,14 +544,9 @@ function handleWatch() {
   const originalText = watchBtn.textContent;
   watchBtn.textContent = 'Загрузка...';
   watchBtn.disabled = true;
+  let url;
   if (selectedMedia.type === 'movie') {
-    const url = buildEmbedUrl(selectedMedia);
-    if (url) {
-      openPlayer(url);
-      closeInfo();
-    } else {
-      showNotice('Не удалось сформировать ссылку.');
-    }
+    url = buildEmbedUrl(selectedMedia);
   } else {
     const s = document.getElementById('seasonSelect').value;
     const e = document.getElementById('episodeSelect').value;
@@ -562,13 +557,13 @@ function handleWatch() {
       watchBtn.disabled = false;
       return;
     }
-    const url = buildEmbedUrl(selectedMedia, s, e);
-    if (url) {
-      openPlayer(url);
-      closeInfo();
-    } else {
-      showNotice('Не удалось создать ссылку.');
-    }
+    url = buildEmbedUrl(selectedMedia, s, e);
+  }
+  if (url) {
+    openPlayer(url);
+    closeInfo();
+  } else {
+    showNotice('Не удалось сформировать ссылку.');
   }
   setTimeout(() => {
     isWatching = false;
