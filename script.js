@@ -1,8 +1,6 @@
 const API_KEY = "d625a81a36ac8141a613981f7f1cb2a1"; // ← ЗАМЕНИТЕ НА СВОЙ КЛЮЧ
-
 const TMDB = "https://api.themoviedb.org/3";
 const IMG = "https://image.tmdb.org/t/p/w500";
-
 let allMedia = [];
 let currentPage = 1;
 const PER_PAGE = 24;
@@ -10,16 +8,13 @@ let currentType = 'movie';
 let totalPages = 1;
 const noticeEl = document.getElementById('notice');
 const MAX_PAGES_TO_LOAD = 50;
-
 function showNotice(text, time = 3500) {
   noticeEl.textContent = text;
   noticeEl.style.display = 'block';
   setTimeout(() => noticeEl.style.display = 'none', time);
 }
-
 async function fetchMedia(query = null, type = currentType) {
   currentPage = 1;
-
   if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY') {
     showNotice('TMDB API key не установлен — загружены демонстрационные данные.');
     let demo = getDemoMedia(type, 1000);
@@ -29,12 +24,10 @@ async function fetchMedia(query = null, type = currentType) {
     renderPage(1);
     return;
   }
-
   try {
     showNotice('Загрузка данных... (может занять 10–15 сек)', 15000);
     const urls = [];
     const maxPages = query ? 10 : MAX_PAGES_TO_LOAD;
-
     for (let page = 1; page <= maxPages; page++) {
       const url = query
         ? `${TMDB}/search/${type}?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(query)}&page=${page}`
@@ -44,7 +37,6 @@ async function fetchMedia(query = null, type = currentType) {
         return res.json();
       }));
     }
-
     const dataPages = await Promise.all(urls);
     let merged = [];
     dataPages.forEach(d => {
@@ -52,7 +44,6 @@ async function fetchMedia(query = null, type = currentType) {
         merged = merged.concat(d.results);
       }
     });
-
     const seen = new Set();
     allMedia = merged
       .filter(item => {
@@ -71,7 +62,6 @@ async function fetchMedia(query = null, type = currentType) {
         type: type,
         seasons: null
       }));
-
     totalPages = Math.ceil(allMedia.length / PER_PAGE);
     renderPage(1);
     showNotice(`Загружено ${allMedia.length} элементов`, 3000);
@@ -83,7 +73,6 @@ async function fetchMedia(query = null, type = currentType) {
     renderPage(1);
   }
 }
-
 // === ТРЕЙЛЕРЫ ===
 const trailerModalStyle = `
   #trailerModal {
@@ -123,42 +112,37 @@ const trailerModalStyle = `
     .trailer-modal-content iframe { height: 300px; }
   }
 `;
-
 if (!document.getElementById('trailer-modal-styles')) {
   const styleEl = document.createElement('style');
   styleEl.id = 'trailer-modal-styles';
   styleEl.textContent = trailerModalStyle;
   document.head.appendChild(styleEl);
 }
-
 async function fetchTrailers() {
   if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY') {
     document.getElementById('trailersTrack').innerHTML = '<div class="trailer-placeholder">Трейлеры недоступны без API-ключа TMDB</div>';
     return;
   }
-
   try {
     showNotice('Загрузка трейлеров...', 5000);
     let allMoviesWithTrailers = [];
     let page = 1;
     const targetCount = 10;
-
     while (allMoviesWithTrailers.length < targetCount && page <= 5) {
       const res = await fetch(`${TMDB}/movie/popular?api_key=${API_KEY}&language=ru-RU&page=${page}`);
       const data = await res.json();
-      
+     
       if (!data.results || data.results.length === 0) break;
-
       const trailerPromises = data.results.map(async (movie) => {
         try {
           const videoRes = await fetch(`${TMDB}/movie/${movie.id}/videos?api_key=${API_KEY}&language=ru-RU`);
           const videoData = await videoRes.json();
-          const trailer = videoData.results.find(v => 
-            v.type === 'Trailer' && 
-            v.site === 'YouTube' && 
+          const trailer = videoData.results.find(v =>
+            v.type === 'Trailer' &&
+            v.site === 'YouTube' &&
             (v.official || v.name?.toLowerCase().includes('trailer'))
-          ) || videoData.results.find(v => 
-            v.type === 'Trailer' && 
+          ) || videoData.results.find(v =>
+            v.type === 'Trailer' &&
             v.site === 'YouTube'
           );
           return trailer ? { ...movie, trailer_key: trailer.key } : null;
@@ -167,19 +151,16 @@ async function fetchTrailers() {
           return null;
         }
       });
-
       const results = await Promise.all(trailerPromises);
       const validTrailers = results.filter(m => m !== null);
-      
+     
       allMoviesWithTrailers.push(...validTrailers);
       page++;
-
       if (allMoviesWithTrailers.length > targetCount) {
         allMoviesWithTrailers = allMoviesWithTrailers.slice(0, targetCount);
         break;
       }
     }
-
     if (allMoviesWithTrailers.length === 0) {
       document.getElementById('trailersTrack').innerHTML = '<div class="trailer-placeholder">Не найдено фильмов с трейлерами</div>';
     } else {
@@ -191,13 +172,12 @@ async function fetchTrailers() {
     document.getElementById('trailersTrack').innerHTML = '<div class="trailer-placeholder">Не удалось загрузить трейлеры</div>';
   }
 }
-
 function renderTrailers(movies) {
   const track = document.getElementById('trailersTrack');
   const cardsHtml = movies.map(movie => `
     <div class="trailer-card" data-key="${movie.trailer_key}" data-title="${escapeHtml(movie.title)}">
-      <img class="trailer-poster" 
-           src="${movie.poster_path ? IMG + movie.poster_path : 'https://via.placeholder.com/500x280?text=Poster'}" 
+      <img class="trailer-poster"
+           src="${movie.poster_path ? IMG + movie.poster_path : 'https://via.placeholder.com/500x280?text=Poster'}"
            alt="${movie.title}">
       <div class="trailer-overlay">
         <h3 class="trailer-title">${escapeHtml(movie.title)}</h3>
@@ -205,19 +185,15 @@ function renderTrailers(movies) {
       </div>
     </div>
   `).join('');
-
   track.innerHTML = cardsHtml + cardsHtml;
-
   const cards = track.querySelectorAll('.trailer-card');
   const half = cards.length / 2;
-
   cards.forEach((card, i) => {
     if (i < half) {
       card.addEventListener('click', () => {
         openTrailerModal(card.dataset.key, card.dataset.title);
       });
     }
-
     card.addEventListener('mouseenter', () => {
       track.style.animationPlayState = 'paused';
     });
@@ -226,7 +202,6 @@ function renderTrailers(movies) {
     });
   });
 }
-
 function openTrailerModal(youtubeKey, title) {
   const modal = document.createElement('div');
   modal.id = 'trailerModal';
@@ -234,18 +209,17 @@ function openTrailerModal(youtubeKey, title) {
     <div class="trailer-modal-content">
       <button class="close-trailer-btn">&times;</button>
       <h3 style="color:#fff; margin:0 0 16px; text-align:center;">${escapeHtml(title)}</h3>
-      <iframe 
-        width="100%" 
-        height="500" 
-        src="https://www.youtube.com/embed/${youtubeKey}?autoplay=1" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      <iframe
+        width="100%"
+        height="500"
+        src="https://www.youtube.com/embed/${youtubeKey}?autoplay=1"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
       </iframe>
     </div>
   `;
   document.body.appendChild(modal);
-
   const closeBtn = modal.querySelector('.close-trailer-btn');
   if (closeBtn) {
     closeBtn.onclick = () => {
@@ -258,7 +232,6 @@ function openTrailerModal(youtubeKey, title) {
     }
   };
 }
-
 function getDemoMedia(type, count = 100) {
   const demo = [];
   const prefix = type === 'movie' ? 'Демо Фильм' : 'Демо Сериал';
@@ -277,23 +250,19 @@ function getDemoMedia(type, count = 100) {
   }
   return demo;
 }
-
 function renderPage(pageNum) {
   if (pageNum < 1) pageNum = 1;
   if (pageNum > totalPages) pageNum = totalPages;
   currentPage = pageNum;
-
   if (allMedia.length === 0) {
     document.getElementById('movies').innerHTML = '<p style="padding:20px; text-align:center;">Ничего не найдено.</p>';
     document.getElementById('pager').innerHTML = '';
     return;
   }
-
   const start = (pageNum - 1) * PER_PAGE;
   const slice = allMedia.slice(start, start + PER_PAGE);
   const container = document.getElementById('movies');
   container.innerHTML = '';
-
   const fragment = document.createDocumentFragment();
   slice.forEach(m => {
     const el = document.createElement('div');
@@ -310,36 +279,31 @@ function renderPage(pageNum) {
   container.appendChild(fragment);
   renderPager();
 }
-
 function renderPager() {
   if (totalPages <= 1) {
     document.getElementById('pager').innerHTML = '';
     return;
   }
-
   const pager = document.getElementById('pager');
   pager.innerHTML = '';
   const fragment = document.createDocumentFragment();
-
   const prevBtn = document.createElement('button');
   prevBtn.innerHTML = '&laquo;';
   prevBtn.disabled = currentPage === 1;
   prevBtn.onclick = () => renderPage(currentPage - 1);
   fragment.appendChild(prevBtn);
-
   if (currentPage > 3) {
     const firstBtn = document.createElement('button');
     firstBtn.textContent = '1';
     firstBtn.onclick = () => renderPage(1);
     fragment.appendChild(firstBtn);
-    
+   
     if (currentPage > 4) {
       const ellipsis = document.createElement('span');
       ellipsis.textContent = '...';
       fragment.appendChild(ellipsis);
     }
   }
-
   const startPage = Math.max(1, currentPage - 2);
   const endPage = Math.min(totalPages, currentPage + 2);
   for (let i = startPage; i <= endPage; i++) {
@@ -349,7 +313,6 @@ function renderPager() {
     btn.onclick = () => renderPage(i);
     fragment.appendChild(btn);
   }
-
   if (currentPage < totalPages - 2) {
     if (currentPage < totalPages - 3) {
       const ellipsis = document.createElement('span');
@@ -361,34 +324,27 @@ function renderPager() {
     lastBtn.onclick = () => renderPage(totalPages);
     fragment.appendChild(lastBtn);
   }
-
   const nextBtn = document.createElement('button');
   nextBtn.innerHTML = '&raquo;';
   nextBtn.disabled = currentPage === totalPages;
   nextBtn.onclick = () => renderPage(currentPage + 1);
   fragment.appendChild(nextBtn);
-
   pager.appendChild(fragment);
 }
-
 function escapeHtml(text) {
   return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 }
-
 // === ПОИСК ===
 const searchInput = document.getElementById('search');
 const searchBtn = document.getElementById('searchBtn');
-
 function performSearch() {
   const q = searchInput.value.trim();
   fetchMedia(q || null, currentType);
 }
-
 searchBtn.addEventListener('click', performSearch);
 searchInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') performSearch();
 });
-
 // === ТИП МЕДИА ===
 const typeSelect = document.getElementById('mediaType');
 typeSelect.addEventListener('change', (e) => {
@@ -396,10 +352,8 @@ typeSelect.addEventListener('change', (e) => {
   searchInput.value = '';
   fetchMedia(null, currentType);
 });
-
 // === ИНФО-ОКНО ===
 let selectedMedia = null;
-
 async function openInfo(media) {
   selectedMedia = media;
   document.getElementById('infoPoster').src = media.poster || 'https://via.placeholder.com/500x750?text=no+image';
@@ -407,9 +361,7 @@ async function openInfo(media) {
   document.getElementById('infoOverview').textContent = media.overview || 'Описание отсутствует.';
   document.getElementById('infoMeta').textContent = `Год: ${media.year} • Рейтинг: ${media.vote}`;
   document.getElementById('tmdbLink').href = media.tmdbUrl || '#';
-
   const selector = document.getElementById('seasonEpisodeSelector');
-
   if (media.type === 'tv') {
     selector.style.display = 'block';
     if (!media.seasons) {
@@ -420,7 +372,6 @@ async function openInfo(media) {
   } else {
     selector.style.display = 'none';
   }
-
   const infoModal = document.getElementById('infoModal');
   infoModal.style.display = 'block';
   const infoBox = document.querySelector('.info-box');
@@ -429,7 +380,6 @@ async function openInfo(media) {
     infoBox.classList.add('show');
   }, 10);
 }
-
 function closeInfo() {
   const infoModal = document.getElementById('infoModal');
   const infoBox = document.querySelector('.info-box');
@@ -439,21 +389,18 @@ function closeInfo() {
     infoModal.style.display = 'none';
   }, 300);
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.querySelector('.close-info-btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', closeInfo);
   }
 });
-
 document.addEventListener('click', (e) => {
   const infoBox = document.getElementById('infoModal');
   if (infoBox.classList.contains('show') && !infoBox.contains(e.target)) {
     closeInfo();
   }
 });
-
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const infoBox = document.getElementById('infoModal');
@@ -462,14 +409,12 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
-
 // === СЕЗОНЫ/ЭПИЗОДЫ ===
 async function populateSeasons(media) {
   const seasonSelect = document.getElementById('seasonSelect');
   const episodeSelect = document.getElementById('episodeSelect');
   seasonSelect.innerHTML = '';
   episodeSelect.innerHTML = '';
-
   if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY') {
     media.seasons = [];
     for (let s = 1; s <= 3; s++) {
@@ -485,11 +430,9 @@ async function populateSeasons(media) {
     await populateEpisodes(1, media);
     return;
   }
-
   try {
     const res = await fetch(`${TMDB}/tv/${media.id}?api_key=${API_KEY}&language=ru-RU`);
     const data = await res.json();
-
     if (data.success === false || data.status_code) {
       console.error('TMDB Error:', data);
       showNotice('Сериал недоступен: ' + (data.status_message || 'ошибка загрузки'));
@@ -497,10 +440,8 @@ async function populateSeasons(media) {
       seasonSelect.innerHTML = '<option>Ошибка загрузки</option>';
       return;
     }
-
     const numSeasons = data.number_of_seasons || 1;
     media.seasons = [];
-
     for (let s = 1; s <= numSeasons; s++) {
       if (s === 0) continue;
       const opt = document.createElement('option');
@@ -509,12 +450,10 @@ async function populateSeasons(media) {
       seasonSelect.appendChild(opt);
       media.seasons[s - 1] = { episodes: null };
     }
-
     seasonSelect.onchange = async () => {
       const s = seasonSelect.value;
       await populateEpisodes(s, media);
     };
-
     if (numSeasons >= 1) {
       await populateEpisodes(1, media);
     }
@@ -523,13 +462,11 @@ async function populateSeasons(media) {
     showNotice('Не удалось загрузить сезоны.');
   }
 }
-
 function populateSeasonsFromCache(media) {
   const seasonSelect = document.getElementById('seasonSelect');
   const episodeSelect = document.getElementById('episodeSelect');
   seasonSelect.innerHTML = '';
   episodeSelect.innerHTML = '';
-
   media.seasons.forEach((season, idx) => {
     const s = idx + 1;
     const opt = document.createElement('option');
@@ -537,20 +474,16 @@ function populateSeasonsFromCache(media) {
     opt.textContent = `Сезон ${s}`;
     seasonSelect.appendChild(opt);
   });
-
   seasonSelect.onchange = async () => {
     const s = seasonSelect.value;
     await populateEpisodes(s, media);
   };
-
   populateEpisodes(1, media);
 }
-
 async function populateEpisodes(seasonNum, media) {
   const episodeSelect = document.getElementById('episodeSelect');
   episodeSelect.innerHTML = '';
   const seasonIdx = seasonNum - 1;
-
   if (media.seasons[seasonIdx].episodes) {
     media.seasons[seasonIdx].episodes.forEach(ep => {
       const opt = document.createElement('option');
@@ -560,7 +493,6 @@ async function populateEpisodes(seasonNum, media) {
     });
     return;
   }
-
   if (!API_KEY || API_KEY === 'YOUR_TMDB_API_KEY') {
     media.seasons[seasonIdx].episodes = [];
     for (let e = 1; e <= 10; e++) {
@@ -573,20 +505,17 @@ async function populateEpisodes(seasonNum, media) {
     }
     return;
   }
-
   try {
     const res = await fetch(`${TMDB}/tv/${media.id}/season/${seasonNum}?api_key=${API_KEY}&language=ru-RU`);
     const data = await res.json();
     const episodes = data.episodes || [];
     media.seasons[seasonIdx].episodes = episodes;
-
     episodes.forEach(ep => {
       const opt = document.createElement('option');
       opt.value = ep.episode_number;
       opt.textContent = `Эпизод ${ep.episode_number}`;
       episodeSelect.appendChild(opt);
     });
-
     if (episodes.length === 0) {
       const opt = document.createElement('option');
       opt.textContent = 'Нет эпизодов';
@@ -597,29 +526,24 @@ async function populateEpisodes(seasonNum, media) {
     showNotice('Ошибка загрузки эпизодов.');
   }
 }
-
 // === MULTIEMBED (ЕДИНСТВЕННЫЙ ПЛЕЕР) ===
 function buildEmbedUrl(media, season = null, episode = null) {
   const id = media.id;
   if (media.type === 'movie') {
-    return `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`;
+    return `https://www.2embed.cc/embed/${id}`;
   } else {
     if (!season || !episode) return null;
-    return `https://multiembed.mov/directstream.php?video_id=${id}&s=${season}&e=${episode}&tmdb=1`;
+    return `https://www.2embed.cc/embedtv/${id}&s=${season}&e=${episode}`;
   }
 }
-
 let isWatching = false;
-
 function handleWatch() {
   if (!selectedMedia || isWatching) return;
   isWatching = true;
-
   const watchBtn = document.getElementById('watchBtn');
   const originalText = watchBtn.textContent;
   watchBtn.textContent = 'Загрузка...';
   watchBtn.disabled = true;
-
   if (selectedMedia.type === 'movie') {
     const url = buildEmbedUrl(selectedMedia);
     if (url) {
@@ -646,7 +570,6 @@ function handleWatch() {
       showNotice('Не удалось создать ссылку.');
     }
   }
-
   setTimeout(() => {
     isWatching = false;
     if (watchBtn) {
@@ -655,26 +578,23 @@ function handleWatch() {
     }
   }, 1500);
 }
-
 // === PLAYER MODAL ===
 let playerIsOpen = false;
-
 function openPlayer(link) {
   if (playerIsOpen) return;
   playerIsOpen = true;
-  
+ 
   const playerModal = document.getElementById('playerModal');
   playerModal.style.display = 'block';
   const frame = document.getElementById('playerFrame');
   frame.src = link;
-  
-  showNotice('Загружается MultiEmbed... Если видео не появится — обновите страницу.', 8000);
-  
+ 
+  showNotice('Загружается 2Embed... Если видео не появится — обновите страницу. Выберите русскую озвучку в плеере, если доступна.', 8000);
+ 
   setTimeout(() => {
     playerModal.classList.add('show');
   }, 10);
 }
-
 function closePlayer() {
   const playerModal = document.getElementById('playerModal');
   playerModal.classList.remove('show');
@@ -685,13 +605,11 @@ function closePlayer() {
     playerIsOpen = false;
   }, 300);
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   const closePlayerBtn = document.querySelector('.close-player-btn');
   if (closePlayerBtn) {
     closePlayerBtn.addEventListener('click', closePlayer);
   }
 });
-
 fetchMedia(null, currentType);
 fetchTrailers();
